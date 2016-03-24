@@ -72,7 +72,7 @@ import libc
 
 extension String {
     public static func buffer(size size: Int) -> [Int8] {
-        return [Int8](count: size, repeatedValue: 0)
+		return [Int8](repeating: 0, count: size)
     }
 
     public init?(pointer: UnsafePointer<UInt8>, length: Int) {
@@ -80,11 +80,7 @@ extension String {
         var buffer = String.buffer(size: length + 1)
         strncpy(&buffer, uPointer, length)
 
-        guard let string = String.fromCString(buffer) else {
-            return nil
-        }
-
-        self.init(string)
+        self.init(String(cString: buffer))
     }
 
     public func trim(characters: CharacterSet) -> String {
@@ -95,35 +91,33 @@ extension String {
     public func trim(left characterSet: CharacterSet) -> String {
         var start = characters.count
 
-        for (index, character) in characters.enumerate() {
+        for (index, character) in characters.enumerated() {
             if !characterSet.contains(character) {
                 start = index
                 break
             }
         }
 
-        return self[startIndex.advancedBy(start) ..< endIndex]
+		return self[startIndex.advanced(by: start) ..< endIndex]
     }
 
     public func trim(right characterSet: CharacterSet) -> String {
         var end = characters.count
 
-        for (index, character) in characters.reverse().enumerate() {
+        for (index, character) in characters.reversed().enumerated() {
             if !characterSet.contains(character) {
                 end = index
                 break
             }
         }
 
-        return self[startIndex ..< startIndex.advancedBy(characters.count - end)]
+		return self[startIndex ..< startIndex.advanced(by: characters.count - end)]
     }
 
-    func split(separator: Character) -> [String] {
-        return self.characters.split { $0 == separator }.map(String.init)
-    }
-    
     func split(maxSplit: Int = Int.max, separator: Character) -> [String] {
-        return self.characters.split(maxSplit) { $0 == separator }.map(String.init)
+		return self.characters
+			.split(separator: separator, maxSplits: maxSplit, omittingEmptySubsequences: false)
+			.map(String.init)
     }
 
     public func finish(ending: String) -> String {
@@ -200,15 +194,15 @@ extension String {
 
         var string = ""
         var decoder = UTF8()
-        var iterator = decodedBytes.generate()
+        var iterator = decodedBytes.makeIterator()
         var finished = false
 
         while !finished {
             let decodingResult = decoder.decode(&iterator)
             switch decodingResult {
-            case .Result(let char): string.append(char)
-            case .EmptyInput: finished = true
-            case .Error:
+            case .scalarValue(let char): string.append(char)
+            case .emptyInput: finished = true
+            case .error:
                 return ""
             }
         }

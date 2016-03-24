@@ -20,7 +20,7 @@ extension Process {
      */
     public static func valueFor(argument name: String, inArguments arguments: [String] = Process.arguments) -> String? {
         for argument in arguments where argument.hasPrefix("--\(name)=") {
-            return argument.split("=").last
+            return argument.componentsSeparated(by: "=").last
         }
         return nil
     }

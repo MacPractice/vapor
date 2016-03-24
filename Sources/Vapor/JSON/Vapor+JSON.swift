@@ -36,7 +36,7 @@ extension Request {
 
 // MARK: Json Convertible 
 
-public enum JsonError: ErrorType {
+public enum JsonError: ErrorProtocol {
     
     /**
      *  When converting to a value from Json, if there is a type conflict, this will throw an error
@@ -179,7 +179,7 @@ extension UInt16 : JsonConvertible {}
 extension UInt32 : JsonConvertible {}
 extension UInt64 : JsonConvertible {}
 
-extension UnsignedIntegerType {
+extension UnsignedInteger {
     public func jsonRepresentation() throws -> Json {
         let double = Double(UIntMax(self.toUIntMax()))
         return Json(double)
@@ -202,7 +202,7 @@ extension Int16 : JsonConvertible {}
 extension Int32 : JsonConvertible {}
 extension Int64 : JsonConvertible {}
 
-extension SignedIntegerType {
+extension SignedInteger {
     public func jsonRepresentation() throws -> Json {
         let double = Double(IntMax(self.toIntMax()))
         return Json(double)

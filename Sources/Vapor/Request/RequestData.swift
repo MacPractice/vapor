@@ -139,7 +139,7 @@ extension Json: Node {
                 .flatMap { js in
                     return js.string
                 }
-                .joinWithSeparator(",")
+				.joined(separator: ",")
         case .ObjectValue(_):
             return nil
         }
@@ -194,7 +194,7 @@ extension String: Node {
     
     public var array: [Node]? {
         return self
-            .split(",")
+			.componentsSeparated(by: ",")
             .map { $0 as Node }
     }
     
@@ -209,7 +209,7 @@ extension Bool {
      */
     public init(_ string: String) {
         let cleaned = string
-            .lowercaseString
+            .lowercased()
             .characters
             .first ?? "n"
         

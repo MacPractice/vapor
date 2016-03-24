@@ -5,13 +5,17 @@ public enum Environment: Equatable {
 	case Custom(String)
 
 	static func fromString(string: String) -> Environment {
-		let string = string.lowercaseString
+		let string = string.lowercased()
 
 		switch string {
-		case "production", "prod": return .Production
-		case "test": return .Test
-		case "development", "dev": return .Development
-		default: return .Custom(string)
+		case "production", "prod":
+			return .Production
+		case "test":
+			return .Test
+		case "development", "dev":
+			return .Development
+		default:
+			return .Custom(string)
 		}
 	}
 }

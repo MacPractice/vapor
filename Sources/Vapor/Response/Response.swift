@@ -135,7 +135,7 @@ public class Response {
             } else {
                 headers["Set-Cookie"] = cookies
                     .map { key, val in return "\(key)=\(val)" }
-                    .joinWithSeparator(";")
+					.joined(separator: ";")
             }
         }
     }
@@ -149,7 +149,7 @@ public class Response {
      - parameter data: the byte sequence that will be transmitted
      - parameter contentType: the content type that the data represents
      */
-    public init<T: SequenceType where T.Generator.Element == UInt8>(status: Status, data: T, contentType: ContentType) {
+    public init<T: Sequence where T.Iterator.Element == UInt8>(status: Status, data: T, contentType: ContentType) {
         self.status = status
         self.data = [UInt8](data)
         self.contentType = contentType
@@ -179,7 +179,7 @@ extension Response {
      
      - InvalidObject: the object to serialize is not a valid Json object
      */
-    public enum SerializationError: ErrorType {
+    public enum SerializationError: ErrorProtocol {
         case InvalidObject
     }
     

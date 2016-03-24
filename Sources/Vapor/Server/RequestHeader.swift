@@ -3,7 +3,7 @@ extension Request {
     // https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html
     internal struct Header {
         
-        enum Error: ErrorType {
+        enum Error: ErrorProtocol {
             case InvalidHeaderKeyPair
         }
         
@@ -60,7 +60,7 @@ extension Request.Header {
     // https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html
     // Request-Line   = Method SP Request-URI SP HTTP-Version CRLF
     internal struct RequestLine {
-        enum Error: ErrorType {
+        enum Error: ErrorProtocol {
             case InvalidComponents
         }
         
@@ -69,7 +69,7 @@ extension Request.Header {
         let version: String
         
         init(_ string: String) throws {
-            let comps = string.split(" ")
+            let comps = string.componentsSeparated(by: " ")
             guard comps.count == 3 else {
                 throw Error.InvalidComponents
             }

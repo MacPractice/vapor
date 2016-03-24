@@ -5,7 +5,7 @@ public class View {
 	public static let resourceDir = Application.workDir + "Resources"
 	var bytes: [UInt8]
 
-    enum Error: ErrorType {
+    enum Error: ErrorProtocol {
         case InvalidPath
     }
 

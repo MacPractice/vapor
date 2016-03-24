@@ -137,17 +137,16 @@ public class Config {
 		}
 	}
 
-	#if swift(>=3.0)
 	private func populateConfigFiles(files: inout [String: [String]], in path: String) throws {
 		let contents = try FileManager.contentsOfDirectory(path)
 		let suffix = ".json"
 
 		for file in contents {
-			guard let fileName = file.split("/").last, suffixRange = fileName.rangeOfString(suffix) where suffixRange.endIndex == fileName.characters.endIndex else {
+			guard let fileName = file.componentsSeparated(by: "/").last, suffixRange = fileName.range(of: suffix) where suffixRange.endIndex == fileName.characters.endIndex else {
 				continue
 			}
 
-			let name = fileName.substringToIndex(suffixRange.startIndex)
+			let name = fileName.substring(to: suffixRange.startIndex)
 
 			if files[name] == nil {
 				files[name] = []
@@ -156,33 +155,6 @@ public class Config {
 			files[name]?.append(file)
 		}
 	}
-	#else
-	private func populateConfigFiles(inout files: [String: [String]], in path: String) throws {
-		let contents = try FileManager.contentsOfDirectory(path)
-
-		for file in contents {
-			guard let fileName = file.split("/").last else {
-				continue
-			}
-
-			let name: String
-
-			if (fileName == ".env.json") {
-				name = ".env"
-			} else if fileName.hasSuffix(".json"), let value = fileName.split(".").first {
-				name = value
-			} else {
-				continue
-			}
-
-			if files[name] == nil {
-				files[name] = []
-			}
-
-			files[name]?.append(file)
-		}
-	}
-	#endif
 
 }
 
@@ -218,7 +190,7 @@ extension Json {
 extension String {
 
 	private var keys: [String] {
-		return split(".")
+		return componentsSeparated(by: ".")
 	}
 
 }

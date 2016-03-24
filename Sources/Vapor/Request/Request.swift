@@ -57,7 +57,7 @@ public class Request {
 
     public init(method: Method, path: String, address: String?, headers: [String: String], body: [UInt8]) {
         self.method = method
-        self.path = path.split(separator: "?").first ?? ""
+        self.path = path.componentsSeparated(by: "?").first ?? ""
         self.address = address
         self.headers = headers
         self.body = body
@@ -90,12 +90,12 @@ public class Request {
             return cookies
         }
         
-        let cookieTokens = string.split(";")
+		let cookieTokens = string.componentsSeparated(by: ";")
         for cookie in cookieTokens {
-            let cookieArray = cookie.split("=")
+            let cookieArray = cookie.componentsSeparated(by: "=")
             
             if cookieArray.count == 2 {
-                let key = cookieArray[0].split(" ").joinWithSeparator("")
+                let key = cookieArray[0].componentsSeparated(by: " ").joined(separator: "")
                 cookies[key] = cookieArray[1]
             }
         }
@@ -130,7 +130,7 @@ extension String {
     internal func keyValuePairs() -> [String: String] {
         var data: [String: String] = [:]
         
-        for pair in self.split("&") {
+        for pair in self.componentsSeparated(by: "&") {
             let tokens = pair.split(1, separator: "=")
             
             if let name = tokens.first, value = tokens.last {

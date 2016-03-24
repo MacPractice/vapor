@@ -32,7 +32,7 @@ extension SocketIO {
         try write(string.utf8)
     }
 
-    public func write<ByteSequence: SequenceType where ByteSequence.Generator.Element == Byte>(bytes: ByteSequence) throws {
+    public func write<ByteSequence: Sequence where ByteSequence.Iterator.Element == Byte>(bytes: ByteSequence) throws {
         try write([UInt8](bytes))
     }
 }
